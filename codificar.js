@@ -1,9 +1,3 @@
-
-
-let contenidoOriginal = document.getElementById("container");
-
-console.log(contenidoOriginal.innerHTML);
-
 function procesarBoton(opcion) {
   if (opcion == "codificar") {
     codificar();
