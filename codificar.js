@@ -42,7 +42,7 @@ function procesarBoton(opcion) {
     }
 
     document.getElementById("cambio").innerHTML = '\
-    <label for="salida">Texto decodificado</label>\
+    <label for="salida">Texto codificado</label>\
     <textarea rows="20" cols="30" id="salida" name="salida" class="textarea">'+resultado+'</textarea>\
     <button onclick="copiarContenido()">Copiar</button>';
     
