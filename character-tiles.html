@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Tiles - Nuevo Personaje</title>
+    <style>
+        body {
+            background: linear-gradient(180deg, #aea4e3, #d3ffe8);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1d1d1d;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 30px;
+        }
+
+        .tile-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .character-tile {
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            border: 1px solid #333;
+            background: #000;
+        }
+
+        .tile-label {
+            font-size: 12px;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .tile-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        button {
+            border-radius: 100rem;
+            padding: 1rem;
+            font-family: 'Avenir Next';
+            font-size: 1rem;
+            padding: .5rem 3rem;
+            color: black;
+            box-shadow: 0 0 6px 0 rgba(157, 96, 212, 0.5);
+            border: solid 3px transparent;
+            background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
+                linear-gradient(101deg, #78e4ff, #ff48fa);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            box-shadow: 2px 1000px 1px #fff inset;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            box-shadow: 0px 0px 20px #c9c9c9;
+        }
+
+        .demo-area {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .character-display {
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            margin: 20px auto;
+            border: 2px solid #333;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Character Tiles - Nuevo Personaje</h1>
+    
+    <div class="demo-area">
+        <h3>Personaje Actual</h3>
+        <div id="currentCharacter" class="character-display"></div>
+        <div class="controls">
+            <button onclick="changeCharacter('idle')">Idle</button>
+            <button onclick="changeCharacter('walk1')">Caminar 1</button>
+            <button onclick="changeCharacter('walk2')">Caminar 2</button>
+            <button onclick="changeCharacter('jump')">Saltar</button>
+            <button onclick="changeCharacter('duck')">Agacharse</button>
+        </div>
+    </div>
+
+    <h3>Sprites del Personaje</h3>
+    <div class="tile-container">
+        <div class="tile-group">
+            <div id="idle" class="character-tile"></div>
+            <div class="tile-label">Idle</div>
+        </div>
+        <div class="tile-group">
+            <div id="walk1" class="character-tile"></div>
+            <div class="tile-label">Caminar 1</div>
+        </div>
+        <div class="tile-group">
+            <div id="walk2" class="character-tile"></div>
+            <div class="tile-label">Caminar 2</div>
+        </div>
+        <div class="tile-group">
+            <div id="jump" class="character-tile"></div>
+            <div class="tile-label">Saltar</div>
+        </div>
+        <div class="tile-group">
+            <div id="duck" class="character-tile"></div>
+            <div class="tile-label">Agacharse</div>
+        </div>
+    </div>
+
+    <script>
+        // Definir los sprites del personaje basados en la imagen 2
+        const characterSprites = {
+            idle: createIdleSprite(),
+            walk1: createWalk1Sprite(),
+            walk2: createWalk2Sprite(),
+            jump: createJumpSprite(),
+            duck: createDuckSprite()
+        };
+
+        function createIdleSprite() {
+            // Sprite base del personaje (posición idle)
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            // Fondo negro
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Cuerpo principal (rojo)
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(8, 12, 16, 12);
+            
+            // Sombrero (gris oscuro)
+            ctx.fillStyle = '#404040';
+            ctx.fillRect(6, 8, 20, 6);
+            ctx.fillRect(8, 6, 16, 2);
+            
+            // Ojos (marrón oscuro)
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(18, 14, 3, 2);
+            ctx.fillRect(22, 14, 3, 2);
+            
+            // Brazo robótico (gris)
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(4, 16, 4, 2);
+            ctx.fillRect(2, 18, 2, 2);
+            
+            // Articulación azul
+            ctx.fillStyle = '#0080FF';
+            ctx.fillRect(2, 18, 2, 2);
+            
+            // Pierna robótica (azul)
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(20, 24, 3, 6);
+            ctx.fillRect(18, 26, 2, 2);
+            
+            // Elementos blancos inferiores
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(10, 24, 12, 2);
+            ctx.fillRect(8, 26, 16, 2);
+            
+            return canvas.toDataURL();
+        }
+
+        function createWalk1Sprite() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Cuerpo ligeramente inclinado
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(7, 12, 16, 12);
+            
+            // Sombrero
+            ctx.fillStyle = '#404040';
+            ctx.fillRect(5, 8, 20, 6);
+            ctx.fillRect(7, 6, 16, 2);
+            
+            // Ojos
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(17, 14, 3, 2);
+            ctx.fillRect(21, 14, 3, 2);
+            
+            // Brazo robótico en movimiento
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(3, 15, 4, 2);
+            ctx.fillRect(1, 17, 2, 2);
+            ctx.fillStyle = '#0080FF';
+            ctx.fillRect(1, 17, 2, 2);
+            
+            // Pierna robótica
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(19, 24, 3, 6);
+            ctx.fillRect(17, 26, 2, 2);
+            
+            // Elementos blancos
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(9, 24, 12, 2);
+            ctx.fillRect(7, 26, 16, 2);
+            
+            return canvas.toDataURL();
+        }
+
+        function createWalk2Sprite() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Cuerpo inclinado al otro lado
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(9, 12, 16, 12);
+            
+            // Sombrero
+            ctx.fillStyle = '#404040';
+            ctx.fillRect(7, 8, 20, 6);
+            ctx.fillRect(9, 6, 16, 2);
+            
+            // Ojos
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(19, 14, 3, 2);
+            ctx.fillRect(23, 14, 3, 2);
+            
+            // Brazo robótico
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(5, 16, 4, 2);
+            ctx.fillRect(3, 18, 2, 2);
+            ctx.fillStyle = '#0080FF';
+            ctx.fillRect(3, 18, 2, 2);
+            
+            // Pierna robótica
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(21, 24, 3, 6);
+            ctx.fillRect(19, 26, 2, 2);
+            
+            // Elementos blancos
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(11, 24, 12, 2);
+            ctx.fillRect(9, 26, 16, 2);
+            
+            return canvas.toDataURL();
+        }
+
+        function createJumpSprite() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Cuerpo en posición de salto (más compacto)
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(8, 8, 16, 14);
+            
+            // Sombrero
+            ctx.fillStyle = '#404040';
+            ctx.fillRect(6, 4, 20, 6);
+            ctx.fillRect(8, 2, 16, 2);
+            
+            // Ojos
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(18, 10, 3, 2);
+            ctx.fillRect(22, 10, 3, 2);
+            
+            // Brazo robótico extendido
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(4, 12, 4, 2);
+            ctx.fillRect(2, 14, 2, 2);
+            ctx.fillStyle = '#0080FF';
+            ctx.fillRect(2, 14, 2, 2);
+            
+            // Pierna robótica extendida
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(20, 22, 3, 8);
+            ctx.fillRect(18, 24, 2, 2);
+            
+            // Elementos blancos
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(10, 22, 12, 2);
+            ctx.fillRect(8, 24, 16, 2);
+            
+            return canvas.toDataURL();
+        }
+
+        function createDuckSprite() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Cuerpo agachado (más ancho, menos alto)
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(6, 16, 20, 10);
+            
+            // Sombrero
+            ctx.fillStyle = '#404040';
+            ctx.fillRect(8, 12, 16, 6);
+            ctx.fillRect(10, 10, 12, 2);
+            
+            // Ojos
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(16, 18, 3, 2);
+            ctx.fillRect(20, 18, 3, 2);
+            
+            // Brazo robótico
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(4, 20, 4, 2);
+            ctx.fillRect(2, 22, 2, 2);
+            ctx.fillStyle = '#0080FF';
+            ctx.fillRect(2, 22, 2, 2);
+            
+            // Pierna robótica
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(18, 26, 3, 4);
+            ctx.fillRect(16, 28, 2, 2);
+            
+            // Elementos blancos
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(8, 26, 16, 2);
+            ctx.fillRect(6, 28, 20, 2);
+            
+            return canvas.toDataURL();
+        }
+
+        // Cargar sprites en los tiles
+        function loadSprites() {
+            Object.keys(characterSprites).forEach(key => {
+                const tile = document.getElementById(key);
+                if (tile) {
+                    tile.style.backgroundImage = `url(${characterSprites[key]})`;
+                    tile.style.backgroundSize = '32px 32px';
+                    tile.style.backgroundRepeat = 'no-repeat';
+                }
+            });
+            
+            // Mostrar sprite inicial
+            changeCharacter('idle');
+        }
+
+        function changeCharacter(spriteType) {
+            const display = document.getElementById('currentCharacter');
+            if (display && characterSprites[spriteType]) {
+                display.style.backgroundImage = `url(${characterSprites[spriteType]})`;
+                display.style.backgroundSize = '64px 64px';
+                display.style.backgroundRepeat = 'no-repeat';
+            }
+        }
+
+        // Cargar sprites cuando se carga la página
+        window.onload = loadSprites;
+    </script>
+</body>
+</html>
